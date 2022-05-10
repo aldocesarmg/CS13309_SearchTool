@@ -31,10 +31,10 @@ namespace CS13309_SearchTool
         {
             String lineaSiguiente;
             String[] postingNumbers = new string[50];
+            List<String> listPosting = new List<string>();
             int numeroLinea = 0, resultadoBusquedaInicio = -1, resultadoBusquedaFinal = 0, contador = 0;
 
-            try
-            {
+            
                 string FileToRead = @"C:\\CS13309\\Tokens.txt";
                 using (StreamReader ReaderObject = new StreamReader(FileToRead))
                 {
@@ -49,10 +49,11 @@ namespace CS13309_SearchTool
                             resultadoBusquedaFinal = Int32.Parse(lineaSiguiente.Substring(encontrarComas(lineaSiguiente)));
 
                             //Console.WriteLine(resultadoBusquedaFinal + "   " + resultadoBusquedaInicio);
-                            postingNumbers = encontrarUbicacionEnPosting(resultadoBusquedaInicio, resultadoBusquedaFinal);
-                            while (postingNumbers[contador] != null)
-                            {
-                                Console.WriteLine("1. " + compararPostingConDiccionario(postingNumbers[contador]));
+                            listPosting = encontrarUbicacionEnPosting(resultadoBusquedaInicio, resultadoBusquedaFinal);
+                            postingNumbers = listPosting.ToArray();
+                            while (contador < listPosting.Count && contador < 10)
+                        {
+                                Console.WriteLine(contador + ".- " + compararPostingConDiccionario(postingNumbers[contador]));
                                 contador++;
                             }
                             break;
@@ -61,11 +62,7 @@ namespace CS13309_SearchTool
                         numeroLinea++;
                     }
                 }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            
         }
 
         public static int encontrarPalabraEnTokens(String palabraBusqueda, String linea) //le pasamos línea por línea para que compare los strings
@@ -102,13 +99,14 @@ namespace CS13309_SearchTool
             return -1;
         }
 
-        public static string[] encontrarUbicacionEnPosting(int comienzoCaracter, int terminoCaracter) //recorre el archivo posting hasta la linea donde se encuentra el caracter
+        public static List<String> encontrarUbicacionEnPosting(int comienzoCaracter, int terminoCaracter) //recorre el archivo posting hasta la linea donde se encuentra el caracter
         {
             String numeroArchivo = "";
-            String[] posicionesEnPosting = new string[50];
+            List<String> posicionesEnPosting = new List<string>();
             int contador = 0;
             char semicolon = '\u003B';
             int repeticiones = terminoCaracter - comienzoCaracter;
+            double pesoAnterior = 0;
 
             try
             {
@@ -131,8 +129,17 @@ namespace CS13309_SearchTool
                             }
                             else
                             {
-                                posicionesEnPosting[contador] = numeroArchivo;
+                                if (Double.Parse(Line.Substring(i + 1)) > pesoAnterior && contador != 0)
+                                {
+                                    posicionesEnPosting.Insert(0, numeroArchivo);
+                                }
+                                else
+                                {
+                                    posicionesEnPosting.Add(numeroArchivo);
+                                }
+
                                 numeroArchivo = "";
+                                pesoAnterior = Double.Parse(Line.Substring(i + 1));
                                 break;
                             }
                         }
