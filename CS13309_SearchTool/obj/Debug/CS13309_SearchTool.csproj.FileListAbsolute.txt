@@ -1,0 +1,8 @@
+D:\ALDOCESARMG\PROJECTS\Visual Studio Projects\TECMI_PDIS\CS13309_SearchTool\CS13309_SearchTool\bin\Debug\CS13309_SearchTool.exe.config
+D:\ALDOCESARMG\PROJECTS\Visual Studio Projects\TECMI_PDIS\CS13309_SearchTool\CS13309_SearchTool\bin\Debug\CS13309_SearchTool.exe
+D:\ALDOCESARMG\PROJECTS\Visual Studio Projects\TECMI_PDIS\CS13309_SearchTool\CS13309_SearchTool\bin\Debug\CS13309_SearchTool.pdb
+D:\ALDOCESARMG\PROJECTS\Visual Studio Projects\TECMI_PDIS\CS13309_SearchTool\CS13309_SearchTool\obj\Debug\CS13309_SearchTool.csproj.AssemblyReference.cache
+D:\ALDOCESARMG\PROJECTS\Visual Studio Projects\TECMI_PDIS\CS13309_SearchTool\CS13309_SearchTool\obj\Debug\CS13309_SearchTool.csproj.SuggestedBindingRedirects.cache
+D:\ALDOCESARMG\PROJECTS\Visual Studio Projects\TECMI_PDIS\CS13309_SearchTool\CS13309_SearchTool\obj\Debug\CS13309_SearchTool.csproj.CoreCompileInputs.cache
+D:\ALDOCESARMG\PROJECTS\Visual Studio Projects\TECMI_PDIS\CS13309_SearchTool\CS13309_SearchTool\obj\Debug\CS13309_SearchTool.exe
+D:\ALDOCESARMG\PROJECTS\Visual Studio Projects\TECMI_PDIS\CS13309_SearchTool\CS13309_SearchTool\obj\Debug\CS13309_SearchTool.pdb
