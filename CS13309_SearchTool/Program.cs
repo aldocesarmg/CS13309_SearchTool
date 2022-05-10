@@ -18,11 +18,177 @@ namespace CS13309_SearchTool
                 {
                     for (int i = 1; i < args.Length; i++)
                     {
+                        Console.WriteLine("Resultados encontrados para la palabra <" + args[i] + "> ...");
                         String palabraBuscar = args[i].ToLower();
-                        Console.WriteLine(args[i]);
+                        buscarPalabra(palabraBuscar);
+                        Console.WriteLine("------------------------");
                     }
                 }
             }
+        }
+
+        public static void buscarPalabra(string palabraBuscada)
+        {
+            String lineaSiguiente;
+            String[] postingNumbers = new string[50];
+            int numeroLinea = 0, resultadoBusquedaInicio = -1, resultadoBusquedaFinal = 0, contador = 0;
+
+            try
+            {
+                string FileToRead = @"C:\\CS13309\\Tokens.txt";
+                using (StreamReader ReaderObject = new StreamReader(FileToRead))
+                {
+                    string Line;
+                    while ((Line = ReaderObject.ReadLine()) != null)
+                    {
+                        resultadoBusquedaInicio = encontrarPalabraEnTokens(palabraBuscada, Line);
+                        
+                        if (resultadoBusquedaInicio > 0)
+                        {
+                            lineaSiguiente = ReaderObject.ReadLine();
+                            resultadoBusquedaFinal = Int32.Parse(lineaSiguiente.Substring(encontrarComas(lineaSiguiente)));
+
+                            //Console.WriteLine(resultadoBusquedaFinal + "   " + resultadoBusquedaInicio);
+                            postingNumbers = encontrarUbicacionEnPosting(resultadoBusquedaInicio, resultadoBusquedaFinal);
+                            while (postingNumbers[contador] != null)
+                            {
+                                Console.WriteLine("1. " + compararPostingConDiccionario(postingNumbers[contador]));
+                                contador++;
+                            }
+                            break;
+                        }
+
+                        numeroLinea++;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static int encontrarPalabraEnTokens(String palabraBusqueda, String linea) //le pasamos línea por línea para que compare los strings
+        {
+            for (int i = 0; i < palabraBusqueda.Length; i++)
+            {
+                if (!linea.ElementAt(i).Equals(palabraBusqueda.ElementAt(i)))
+                {
+                    return -1;
+                }
+            }
+            int resultado = Int32.Parse(linea.Substring(encontrarComas(linea)));
+
+            return resultado;
+        }
+
+        public static int encontrarComas(String linea)
+        {
+            char semicolon = '\u003B';
+            int contadorComas = 0;
+
+            for (int i = 0; i < linea.Length; i++)
+            {
+                if (linea.ElementAt(i).Equals(semicolon))
+                {
+                    contadorComas++;
+                    if (contadorComas > 1)
+                    {
+                        i++;
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
+
+        public static string[] encontrarUbicacionEnPosting(int comienzoCaracter, int terminoCaracter) //recorre el archivo posting hasta la linea donde se encuentra el caracter
+        {
+            String numeroArchivo = "";
+            String[] posicionesEnPosting = new string[50];
+            int contador = 0;
+            char semicolon = '\u003B';
+            int repeticiones = terminoCaracter - comienzoCaracter;
+
+            try
+            {
+                string FileToRead = @"C:\\CS13309\\Posting.txt";
+                using (StreamReader ReaderObject = new StreamReader(FileToRead))
+                {
+                    for (int i = 0; i < comienzoCaracter; i++)
+                    {
+                        ReaderObject.ReadLine();
+                    }
+                    
+                    string Line;
+                    while ((Line = ReaderObject.ReadLine()) != null && repeticiones > 0)
+                    {
+                        for (int i = 0; i < Line.Length; i++)
+                        {
+                            if (!Line.ElementAt(i).Equals(semicolon))
+                            {
+                                numeroArchivo = numeroArchivo.Insert(i, char.ToString(Line.ElementAt(i)));
+                            }
+                            else
+                            {
+                                posicionesEnPosting[contador] = numeroArchivo;
+                                numeroArchivo = "";
+                                break;
+                            }
+                        }
+
+                        contador++;
+                        repeticiones--;
+
+                    }
+                }
+
+                return posicionesEnPosting;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+        }
+
+        public static string compararPostingConDiccionario(String ubicacionEncontrada)
+        {
+            Boolean nombreHTMLencontrado;
+
+            try
+            {
+                string FileToRead = @"C:\\CS13309\\Diccionario.txt";
+                using (StreamReader ReaderObject = new StreamReader(FileToRead))
+                {
+                    string Line;
+                    while ((Line = ReaderObject.ReadLine()) != null)
+                    {
+                        nombreHTMLencontrado = true;
+
+                        for (int i = 0; i < ubicacionEncontrada.Length; i++)
+                        {
+                            if (!Line.ElementAt(i).Equals(ubicacionEncontrada.ElementAt(i)))
+                            {
+                                nombreHTMLencontrado = false;
+                                break;
+                            }
+                        }
+
+                        if (nombreHTMLencontrado)
+                        {
+                            return Line.Substring(ubicacionEncontrada.Length + 1);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error en método compararPostingConDiccionario");
+                throw;
+            }
+
+            return null;
         }
     }
 }
